@@ -30,6 +30,7 @@ pacman --noconfirm -Suy
 # Install the required packages
 pacman --noconfirm -S --needed \
     base-devel \
+    mingw-w64-$MSYS2_ARCH-binutils \
     mingw-w64-$MSYS2_ARCH-toolchain \
     mingw-w64-$MSYS2_ARCH-ccache \
     \
@@ -72,6 +73,7 @@ pacman --noconfirm -S --needed \
 export GIMP_PREFIX=`realpath ./_install`
 export GIMP_DISTRIB=`realpath ./gimp-w64`
 export MSYS_PREFIX="/c/msys64/mingw64/"
+export PATH="$GIMP_PREFIX/bin:/mingw64/bin:$PATH"
 
 # Package ressources.
 mkdir -p ${GIMP_DISTRIB}
