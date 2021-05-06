@@ -77,7 +77,7 @@ export MSYS_PREFIX="/c/msys64/mingw64/"
 mkdir -p ${GIMP_DISTRIB}
 cp -fr ${GIMP_PREFIX}/etc ${GIMP_DISTRIB}
 cp -fr ${GIMP_PREFIX}/include ${GIMP_DISTRIB}
-cp -fr ${GIMP_PREFIX}/ssl ${GIMP_DISTRIB}
+#cp -fr ${GIMP_PREFIX}/ssl ${GIMP_DISTRIB}
 cp -fr ${GIMP_PREFIX}/share ${GIMP_DISTRIB}
 
 # Package executables.
@@ -104,7 +104,6 @@ cp -fr ${GIMP_PREFIX}/lib/girepository-1.0/* ${GIMP_DISTRIB}/lib/girepository-1.
 cp -fr ${MSYS_PREFIX}/lib/gio ${GIMP_DISTRIB}/lib/
 cp -fr ${MSYS_PREFIX}/lib/gdk-pixbuf-2.0 ${GIMP_DISTRIB}/lib/
 
-mkdir ${GIMP_DISTRIB}/share/
 cp -fr ${MSYS_PREFIX}/share/glib-2.0 ${GIMP_DISTRIB}/share/
 
 # Generate share/glib-2.0/schemas/gschemas.compiled
