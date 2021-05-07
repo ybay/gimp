@@ -108,6 +108,42 @@ cp -fr ${MSYS_PREFIX}/lib/gdk-pixbuf-2.0 ${GIMP_DISTRIB}/lib/
 
 cp -fr ${MSYS_PREFIX}/share/glib-2.0 ${GIMP_DISTRIB}/share/
 
+ls ${MSYS_PREFIX}/share/locale/*/LC_MESSAGES/
+ls ${MSYS_PREFIX}/bin/
+
+# Only copy from langs supported in GIMP.
+for dir in ${GIMP_DISTRIB}/share/locale/*/; do
+  lang=`basename "$dir"`;
+  # TODO: ideally we could be a bit more accurate and copy only the
+  # language files from our dependencies and iso_639.mo. But let's go
+  # with this for now, especially as each lang may have different
+  # translation availabilit.
+  if [ -d "${MSYS_PREFIX}/share/locale/${lang}/LC_MESSAGES/" ]; then
+    cp -fr "${MSYS_PREFIX}/share/locale/${lang}/LC_MESSAGES/"*.mo "${GIMP_DISTRIB}/share/locale/${lang}/LC_MESSAGES/"
+  fi
+done;
+
+# Only one iso-codes file is useful.
+mkdir -p ${GIMP_DISTRIB}/share/xml/iso-codes
+cp -fr ${MSYS_PREFIX}/share/xml/iso-codes/iso_639.xml ${GIMP_DISTRIB}/share/xml/iso-codes/
+
+# Adwaita can be used as the base icon set.
+cp -fr ${MSYS_PREFIX}/share/icons/Adwaita ${GIMP_DISTRIB}/share/icons/
+
+# Executables for supported interpreters.
+cp -fr ${MSYS_PREFIX}/bin/pythonw.exe ${GIMP_DISTRIB}/bin/
+python3 build/windows/gitlab-ci/dll_link.py ${GIMP_DISTRIB}/bin/pythonw.exe ${GIMP_PREFIX}/ ${GIMP_DISTRIB}
+python3 build/windows/gitlab-ci/dll_link.py ${GIMP_DISTRIB}/bin/pythonw.exe ${MSYS_PREFIX}/ ${GIMP_DISTRIB}
+
+cp -fr ${MSYS_PREFIX}/bin/luajit.exe ${GIMP_DISTRIB}/bin/
+python3 build/windows/gitlab-ci/dll_link.py ${GIMP_DISTRIB}/bin/luajit.exe ${GIMP_PREFIX}/ ${GIMP_DISTRIB}
+python3 build/windows/gitlab-ci/dll_link.py ${GIMP_DISTRIB}/bin/luajit.exe ${MSYS_PREFIX}/ ${GIMP_DISTRIB}
+
+# Executable for "gegl:introspect" from graphviz package.
+cp -fr ${MSYS_PREFIX}/bin/dot.exe ${GIMP_DISTRIB}/bin/
+python3 build/windows/gitlab-ci/dll_link.py ${GIMP_DISTRIB}/bin/dot.exe ${GIMP_PREFIX}/ ${GIMP_DISTRIB}
+python3 build/windows/gitlab-ci/dll_link.py ${GIMP_DISTRIB}/bin/dot.exe ${MSYS_PREFIX}/ ${GIMP_DISTRIB}
+
 # Generate share/glib-2.0/schemas/gschemas.compiled
 glib-compile-schemas --targetdir=${GIMP_DISTRIB}/share/glib-2.0/schemas ${GIMP_DISTRIB}/share/glib-2.0/schemas
 
@@ -155,5 +191,4 @@ for dll in ${GIMP_DISTRIB}/lib/gimp/2.99/plug-ins/*/*.exe; do
   python3 build/windows/gitlab-ci/dll_link.py $dll ${MSYS_PREFIX}/ ${GIMP_DISTRIB};
 done
 
-ls ${MSYS_PREFIX}/share/*/*
-ls ${MSYS_PREFIX}/lib/*/*
+ls ${MSYS_PREFIX}/ssl*/*

@@ -73,11 +73,16 @@ def find_dependencies(obj, srcdir):
       objdump = 'x86_64-w64-mingw32-objdump'
     elif 'PE32' in file_type:
       objdump = 'i686-w64-mingw32-objdump'
-    print("Objdump is: {}".format(objdump))
-    objdump = 'objdump.exe'
 
     if objdump is None:
       sys.stderr.write('File type of {} unknown: {}\n'.format(obj, file_type))
+      sys.exit(os.EX_UNAVAILABLE)
+    elif shutil.which(objdump) is None:
+      # For native objdump case.
+      objdump = 'objdump.exe'
+
+    if shutil.which(objdump) is None:
+      sys.stderr.write("Executable doesn't exist: {}\n".format(objdump))
       sys.exit(os.EX_UNAVAILABLE)
 
     result = subprocess.run([objdump, '-p', obj], stdout=subprocess.PIPE)
